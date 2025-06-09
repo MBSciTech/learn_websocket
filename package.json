@@ -1,0 +1,23 @@
+{
+  "name": "learn_websocket",
+  "version": "1.0.0",
+  "description": "learning web sockets for Real time data analysis and conversation.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MBSciTech/learn_websocket.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MBSciTech/learn_websocket/issues"
+  },
+  "homepage": "https://github.com/MBSciTech/learn_websocket#readme",
+  "dependencies": {
+    "express": "^5.1.0",
+    "socket.io": "^4.8.1"
+  }
+}
