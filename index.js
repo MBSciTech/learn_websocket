@@ -33,6 +33,7 @@ io.on('connection', (socket) => {
         const username = users.get(socket.id) || 'Anonymous';
         io.emit('message', {
             username: username,
+            userid : socket.id,
             message: message
         });
     });

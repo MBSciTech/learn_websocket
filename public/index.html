@@ -2,23 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Chat App</title>
     <link href="style.css" rel="stylesheet">
 </head>
 <body>
     <div id="login-container">
         <h2>Enter your username</h2>
-        <input type="text" id="username-input" placeholder="Username">
+        <input type="text" id="username-input" placeholder="Username" autocomplete="off">
         <button id="login-btn">Join Chat</button>
     </div>
 
     <div id="chat-container" style="display: none;">
         <div id="info"></div>
-        <h1>Chatting</h1>
+        <h1>M + CHAT ☕</h1>
         <div id="messages"></div>
-        <input type="text" name="message" id="message-box" placeholder="Enter Message"> 
-        <button id="send-btn">Send</button>
+        <div style="display: flex; align-items: center; margin-top: 10px;">
+            <input type="text" name="message" id="message-box" placeholder="Enter Message" autocomplete="off"> 
+            <button id="send-btn">Send</button>
+        </div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -55,7 +57,55 @@
         // Handle receiving messages
         socket.on('message', (data) => {
             const messageElement = document.createElement('div');
-            messageElement.textContent = `${data.username}: ${data.message}`;
+            const date = new Date();
+            const meridiem = (date.getHours()<=12)?'a.m.':'p.m.';
+            if(data.userid === socket.id){
+                messageElement.innerHTML = `
+                <div id='self-box'>
+                    <div id='self-username'>
+                    ${data.username}
+                    </div>
+                <div id='self-message'>
+                    ${data.message}
+                </div>
+
+                <div id='sent-time'>
+                    ${date.getHours()}:${date.getMinutes()} ${meridiem}
+                </div>
+                </div>
+            `;
+            }
+            else if(data.username==='System'){
+                messageElement.innerHTML = `
+                <div id='sys-box'>
+                    <div id='username'>
+                    ${data.username}
+                    </div>
+                <div id='message'>
+                    ${data.message}
+                </div>
+
+                <div id='sent-time'>
+                    ${date.getHours()}:${date.getMinutes()} ${meridiem}
+                </div>
+                </div>
+            `;
+            }else{
+                messageElement.innerHTML = `
+                <div id='box'>
+                    <div id='username'>
+                    ${data.username}
+                    </div>
+                <div id='message'>
+                    ${data.message}
+                </div>
+
+                <div id='sent-time'>
+                    ${date.getHours()}:${date.getMinutes()} ${meridiem}
+                </div>
+                </div>
+            `;
+            }
             messagesDiv.appendChild(messageElement);
         });
 
