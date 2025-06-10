@@ -4,23 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat App</title>
+    <link href="style.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Chatting</h1>
-    <input type="text" name="message" id="message-box" placeholder="Enter Message"> 
-    <button id="send-btn">Send</button>
+    <div id="login-container">
+        <h2>Enter your username</h2>
+        <input type="text" id="username-input" placeholder="Username">
+        <button id="login-btn">Join Chat</button>
+    </div>
 
-    <div id="messages">
-            
+    <div id="chat-container" style="display: none;">
+        <div id="info"></div>
+        <h1>Chatting</h1>
+        <div id="messages"></div>
+        <input type="text" name="message" id="message-box" placeholder="Enter Message"> 
+        <button id="send-btn">Send</button>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        // Create socket connection when page loads
         const socket = io();
+        const loginContainer = document.getElementById('login-container');
+        const chatContainer = document.getElementById('chat-container');
+        const usernameInput = document.getElementById('username-input');
+        const loginBtn = document.getElementById('login-btn');
         const sendBtn = document.getElementById('send-btn');
         const messageInput = document.getElementById('message-box');
         const messagesDiv = document.getElementById('messages');
+        let username = '';
+
+        // Handle login
+        loginBtn.addEventListener('click', () => {
+            username = usernameInput.value.trim();
+            if (username) {
+                socket.emit('set-username', username);
+                loginContainer.style.display = 'none';
+                chatContainer.style.display = 'block';
+            }
+        });
 
         // Handle sending messages
         sendBtn.addEventListener("click", (e) => {
@@ -32,9 +53,9 @@
         });
 
         // Handle receiving messages
-        socket.on('message', (message) => {
+        socket.on('message', (data) => {
             const messageElement = document.createElement('div');
-            messageElement.textContent = message;
+            messageElement.textContent = `${data.username}: ${data.message}`;
             messagesDiv.appendChild(messageElement);
         });
 
